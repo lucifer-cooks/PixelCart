@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details | PixelGear</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .product-detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+      margin-top: 2rem;
+    }
+
+    /* Image Gallery & Zoom */
+    .gallery-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .main-image-viewport {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 1.4;
+      cursor: zoom-in;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-image-viewport img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.1s ease-out;
+      transform-origin: center center;
+    }
+
+    .gallery-thumbnails {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .thumb-img {
+      width: 80px;
+      height: 60px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      object-fit: cover;
+      background-color: var(--bg-secondary);
+      transition: var(--transition);
+    }
+
+    .thumb-img.active, .thumb-img:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: var(--shadow-neon);
+    }
+
+    /* Meta details */
+    .detail-info-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stock-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .stock-status.in-stock { color: var(--success); }
+    .stock-status.low-stock { color: var(--warning); }
+    .stock-status.out-of-stock { color: var(--error); }
+
+    .qty-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      width: fit-content;
+      margin-bottom: 2rem;
+    }
+
+    .qty-btn {
+      background: none;
+      border: none;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .qty-btn:hover {
+      color: var(--accent-cyan);
+    }
+
+    .qty-input {
+      width: 40px;
+      text-align: center;
+      border: none;
+      background: none;
+      font-weight: 700;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    /* Tabs & Specifications */
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background-color: var(--bg-secondary);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .specs-table td {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .specs-table tr:last-child td {
+      border: none;
+    }
+
+    .specs-label {
+      font-weight: 700;
+      color: var(--accent-cyan);
+      width: 35%;
+    }
+
+    /* Reviews section styles */
+    .reviews-layout {
+      margin-top: 5rem;
+    }
+
+    .review-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 3rem;
+      margin-top: 2rem;
+    }
+
+    .review-score-box {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      align-self: start;
+    }
+
+    .review-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .review-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .review-rating-stars {
+      color: var(--accent-yellow);
+      font-size: 0.9rem;
+    }
+
+    .review-author {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .review-date {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .review-form-container {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    .star-rating-select {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+
+    .star-rating-select i:hover,
+    .star-rating-select i.active {
+      color: var(--accent-yellow);
+    }
+
+    @media (max-width: 768px) {
+      .product-detail-layout, .review-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <div class="container nav-bar">
+      <a href="/" class="logo">
+        <i class="fa-solid fa-keyboard"></i> Pixel<span>Keys</span>
+      </a>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="/">Home</a></li>
+        <li class="nav-item active"><a href="/shop">Shop</a></li>
+        <li class="nav-item"><a href="/wishlist">Wishlist</a></li>
+        <li class="nav-item"><a href="/orders">Orders</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button id="theme-toggle" class="nav-btn" aria-label="Toggle Theme">
+          <i class="fas fa-sun"></i>
+        </button>
+        <a href="/wishlist" class="nav-btn" aria-label="Wishlist">
+          <i class="fas fa-heart"></i>
+          <span id="wishlist-badge" class="badge" style="display: none;">0</span>
+        </a>
+        <a href="/cart" class="nav-btn" aria-label="Shopping Cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cart-badge" class="badge" style="display: none;">0</span>
+        </a>
+        
+        <!-- User Menu Dropdown -->
+        <div class="user-menu-container">
+          <a href="/login" id="login-link" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.9rem;">Sign In</a>
+          <button id="user-menu-btn" class="nav-btn" style="display: none; width: auto; padding: 0 1rem; border-radius: 20px; gap: 0.5rem;" aria-label="User profile menu">
+            <i class="fas fa-user-circle"></i>
+            <span>User</span>
+          </button>
+          <div id="user-dropdown" class="dropdown-menu">
+            <a href="/profile" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+            <a href="/admin" id="dropdown-admin-link" class="dropdown-item" style="display: none;"><i class="fas fa-cog"></i> Admin Panel</a>
+            <a href="#" id="logout-btn" class="dropdown-item" style="border-top: 1px solid var(--card-border);"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Product Details Section -->
+  <main class="container">
+    <div id="product-details-container" class="product-detail-layout">
+      <!-- Skeletons for Loading -->
+      <div class="skeleton-card" style="height: 380px;">
+        <div class="skeleton skeleton-img" style="height: 100%;"></div>
+      </div>
+      <div class="skeleton-card" style="height: 380px;">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-text" style="height: 60px;"></div>
+        <div class="skeleton skeleton-price"></div>
+      </div>
+    </div>
+
+    <!-- Tech Specs / Details Tabs -->
+    <section style="margin-top: 4rem;">
+      <h2 class="section-title"><i class="fas fa-microchip" style="color: var(--accent-cyan);"></i> Technical Specifications</h2>
+      <table class="specs-table">
+        <tbody>
+          <tr>
+            <td class="specs-label">Layout Layout</td>
+            <td id="spec-layout">Loading...</td>
+          </tr>
+          <tr>
+            <td class="specs-label">Switch Options</td>
+            <td id="spec-switches">Loading...</td>
+          </tr>
+          <tr>
+            <td class="specs-label">Hot-Swappable PCB</td>
+            <td id="spec-hotswap">Loading...</td>
+          </tr>
+          <tr>
+            <td class="specs-label">Keycaps Supplied</td>
+            <td id="spec-keycaps">Loading...</td>
+          </tr>
+          <tr>
+            <td class="specs-label">Connectivity</td>
+            <td id="spec-connectivity">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="reviews-layout">
+      <h2 class="section-title"><i class="fas fa-star" style="color: var(--accent-yellow);"></i> Customer Reviews</h2>
+      <div class="review-row">
+        <!-- Review score breakdown -->
+        <div class="review-score-box">
+          <h3 style="font-size: 3rem; font-weight: 800; color: var(--accent-yellow);" id="rating-avg-big">0.0</h3>
+          <div class="product-rating" style="justify-content: center; font-size: 1.2rem; margin: 0.5rem 0;" id="rating-stars-big">
+            <!-- stars dynamically injected -->
+          </div>
+          <p style="color: var(--text-secondary);" id="rating-count-big">Based on 0 reviews</p>
+        </div>
+
+        <!-- Review card listing -->
+        <div>
+          <div id="reviews-list-container">
+            <p style="color: var(--text-secondary);">No reviews submitted for this keyboard yet.</p>
+          </div>
+
+          <!-- Review Form -->
+          <div id="add-review-section" class="review-form-container" style="display: none;">
+            <h3>Write a Review</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Share your custom typing build experiences with other developers.</p>
+            <form id="review-form">
+              <div class="form-group">
+                <label>Overall Rating</label>
+                <div id="star-selector" class="star-rating-select">
+                  <i class="far fa-star" data-rating="1"></i>
+                  <i class="far fa-star" data-rating="2"></i>
+                  <i class="far fa-star" data-rating="3"></i>
+                  <i class="far fa-star" data-rating="4"></i>
+                  <i class="far fa-star" data-rating="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="review-comment">Your Review Comments</label>
+                <textarea id="review-comment" class="form-control" rows="4" placeholder="How does the typing feel? How do the keys sound?..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Review</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Products -->
+    <section style="margin-top: 5rem; margin-bottom: 3rem;">
+      <h2 class="section-title"><i class="fas fa-layer-group" style="color: var(--accent-pink);"></i> Complete Your Build Setup</h2>
+      <div id="related-products-container" class="product-grid">
+        <!-- related items injected -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col" style="grid-column: span 2;">
+        <a href="/" class="footer-logo"><i class="fa-solid fa-keyboard"></i> PixelGear</a>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">PixelGear is the ultimate hub for gamers and e-sports enthusiasts. Custom components, premium builds, and sound profiles mapped to enhance your desk experience.</p>
+        <div style="display: flex; gap: 1rem; font-size: 1.25rem;">
+          <a href="#" style="color: var(--text-secondary);"><i class="fab fa-twitter"></i></a>
+          <a href="#" style="color: var(--text-secondary);"><i class="fab fa-instagram"></i></a>
+          <a href="#" style="color: var(--text-secondary);"><i class="fab fa-youtube"></i></a>
+          <a href="#" style="color: var(--text-secondary);"><i class="fab fa-discord"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul class="footer-links">
+          <li><a href="/shop">All Products</a></li>
+          <li><a href="/shop?category=prebuilt-keyboards">Prebuilt Keyboards</a></li>
+          <li><a href="/shop?category=diy-kits">DIY Cases & PCBs</a></li>
+          <li><a href="/shop?category=mechanical-switches">Lubed Switches</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul class="footer-links">
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Shipping Policy</a></li>
+          <li><a href="#">Refund Policy</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; 2026 PixelGear Co. All rights reserved.</p>
+      <p>Designed with <i class="fas fa-heart" style="color: var(--accent-pink);"></i> for developers & builders.</p>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/product.js"></script>
+</body>
+</html>

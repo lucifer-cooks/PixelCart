@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | PixelGear</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <div class="container nav-bar">
+      <a href="/" class="logo">
+        <i class="fa-solid fa-keyboard"></i> Pixel<span>Keys</span>
+      </a>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="/">Home</a></li>
+        <li class="nav-item"><a href="/shop">Shop</a></li>
+        <li class="nav-item"><a href="/wishlist">Wishlist</a></li>
+        <li class="nav-item"><a href="/orders">Orders</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button id="theme-toggle" class="nav-btn" aria-label="Toggle Theme">
+          <i class="fas fa-sun"></i>
+        </button>
+        <a href="/wishlist" class="nav-btn" aria-label="Wishlist">
+          <i class="fas fa-heart"></i>
+          <span id="wishlist-badge" class="badge" style="display: none;">0</span>
+        </a>
+        <a href="/cart" class="nav-btn" aria-label="Shopping Cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cart-badge" class="badge" style="display: none;">0</span>
+        </a>
+        
+        <!-- User Menu Dropdown -->
+        <div class="user-menu-container">
+          <a href="/login" id="login-link" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.9rem;">Sign In</a>
+          <button id="user-menu-btn" class="nav-btn" style="display: none; width: auto; padding: 0 1rem; border-radius: 20px; gap: 0.5rem;" aria-label="User profile menu">
+            <i class="fas fa-user-circle"></i>
+            <span>User</span>
+          </button>
+          <div id="user-dropdown" class="dropdown-menu">
+            <a href="/profile" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+            <a href="/admin" id="dropdown-admin-link" class="dropdown-item" style="display: none;"><i class="fas fa-cog"></i> Admin Panel</a>
+            <a href="#" id="logout-btn" class="dropdown-item" style="border-top: 1px solid var(--card-border);"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Admin Main Layout -->
+  <main class="container">
+    <div class="admin-wrapper-layout">
+      <!-- Admin Sidebar navigation -->
+      <aside class="admin-sidebar">
+        <div class="admin-user-title">
+          <i class="fas fa-user-shield"></i>
+          <div>
+            <div style="font-weight: 700;">Admin Control</div>
+            <div style="font-size: 0.75rem; color: var(--accent-cyan);">Superuser Mode</div>
+          </div>
+        </div>
+
+        <nav style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.5rem;">
+          <button class="admin-nav-item active" onclick="switchAdminTab('stats', this)"><i class="fas fa-chart-pie"></i> Overview Stats</button>
+          <button class="admin-nav-item" onclick="switchAdminTab('products', this)"><i class="fas fa-cubes"></i> Gaming Gear Catalog</button>
+          <button class="admin-nav-item" onclick="switchAdminTab('orders', this)"><i class="fas fa-shipping-fast"></i> Order Processing</button>
+          <button class="admin-nav-item" onclick="switchAdminTab('users', this)"><i class="fas fa-users"></i> User Accounts</button>
+        </nav>
+      </aside>
+
+      <!-- Admin Main Panel -->
+      <section class="admin-content-card">
+        
+        <!-- Tab 1: Stats Overview -->
+        <div id="admin-tab-stats" class="admin-tab-panel active">
+          <h2 style="font-size: 1.75rem; margin-bottom: 2rem;"><i class="fas fa-chart-line"></i> Operations Dashboard</h2>
+          
+          <!-- Grid of KPI cards -->
+          <div class="kpi-grid">
+            <div class="kpi-card cyan">
+              <i class="fas fa-dollar-sign"></i>
+              <div>
+                <span class="kpi-title">Gross Revenue</span>
+                <span class="kpi-value" id="kpi-revenue">$0.00</span>
+              </div>
+            </div>
+            <div class="kpi-card pink">
+              <i class="fas fa-shopping-bag"></i>
+              <div>
+                <span class="kpi-title">Total Orders</span>
+                <span class="kpi-value" id="kpi-orders">0</span>
+              </div>
+            </div>
+            <div class="kpi-card purple">
+              <i class="fas fa-users"></i>
+              <div>
+                <span class="kpi-title">Active Customers</span>
+                <span class="kpi-value" id="kpi-users">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stock Warnings & Categories -->
+          <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; margin-top: 3rem;">
+            <!-- Low Stock Warnings -->
+            <div class="admin-data-card">
+              <h3><i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i> Low Stock Alerts</h3>
+              <div style="margin-top: 1rem; overflow-x: auto;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Brand</th>
+                      <th>Units Left</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stock-warning-tbody">
+                    <tr><td colspan="3" style="color:var(--text-secondary);">No low stock items.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Categories Breakdown -->
+            <div class="admin-data-card">
+              <h3><i class="fas fa-chart-pie" style="color: var(--accent-pink);"></i> Catalog Breakdown</h3>
+              <div id="category-breakdown-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                <!-- Filled dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Gaming Gear Catalog (Product manager) -->
+        <div id="admin-tab-products" class="admin-tab-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2><i class="fas fa-cubes"></i> Gaming Gear Catalog</h2>
+            <button class="btn btn-primary" onclick="showAddProductModal()"><i class="fas fa-plus"></i> Add New Product</button>
+          </div>
+
+          <!-- Product Table -->
+          <div style="overflow-x: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Brand</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-products-tbody">
+                <!-- Dynamic products list -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 3: Order Processing -->
+        <div id="admin-tab-orders" class="admin-tab-panel">
+          <h2 style="font-size: 1.75rem; margin-bottom: 2rem;"><i class="fas fa-shipping-fast"></i> Order Processing</h2>
+          <div style="overflow-x: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Date</th>
+                  <th>Total</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-orders-tbody">
+                <!-- dynamic orders list -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 4: User Accounts -->
+        <div id="admin-tab-users" class="admin-tab-panel">
+          <h2 style="font-size: 1.75rem; margin-bottom: 2rem;"><i class="fas fa-users"></i> Registered Accounts</h2>
+          <div style="overflow-x: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Registered</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-tbody">
+                <!-- dynamic users list -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- Product Modal (Add/Edit Product Overlay) -->
+  <div id="product-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 id="modal-title" style="font-size: 1.5rem; font-weight: 700;">Add Product</h3>
+        <button class="nav-btn" onclick="closeProductModal()"><i class="fas fa-times"></i></button>
+      </div>
+
+      <form id="product-form" enctype="multipart/form-data">
+        <input type="hidden" id="edit-prod-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="prod-title">Product Title</label>
+            <input type="text" id="prod-title" class="form-control" required placeholder="e.g. PixelGear Cyber80">
+          </div>
+          <div class="form-group">
+            <label for="prod-brand">Brand</label>
+            <input type="text" id="prod-brand" class="form-control" required placeholder="e.g. PixelGear">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="prod-price">Retail Price ($)</label>
+            <input type="number" id="prod-price" class="form-control" required step="0.01" placeholder="e.g. 199.99">
+          </div>
+          <div class="form-group">
+            <label for="prod-stock">Initial Stock Level</label>
+            <input type="number" id="prod-stock" class="form-control" required placeholder="e.g. 25">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="prod-category">Category</label>
+          <select id="prod-category" class="form-control" required style="background:var(--bg-tertiary);">
+            <!-- loaded dynamically -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="prod-desc">Product Description</label>
+          <textarea id="prod-desc" class="form-control" rows="3" placeholder="Specs, sound dampening foams, plate materials..." required></textarea>
+        </div>
+
+        <h4 style="font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.25rem;">Technical Specifications</h4>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="prod-layout">Keyboard Layout</label>
+            <input type="text" id="prod-layout" class="form-control" placeholder="e.g. 75%, TKL, 60%">
+          </div>
+          <div class="form-group">
+            <label for="prod-switches">Switch Type</label>
+            <input type="text" id="prod-switches" class="form-control" placeholder="e.g. Linear Lubed, Tactile">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="prod-keycaps">Keycaps Profile/Material</label>
+            <input type="text" id="prod-keycaps" class="form-control" placeholder="e.g. Cherry Profile PBT">
+          </div>
+          <div class="form-group">
+            <label for="prod-connectivity">Connectivity Options</label>
+            <input type="text" id="prod-connectivity" class="form-control" placeholder="e.g. USB-C Wired, Bluetooth">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="prod-images">Product Images (Upload files)</label>
+          <input type="file" id="prod-images" class="form-control" multiple accept="image/*">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem; height: 45px;"><i class="fas fa-save"></i> Save Product Info</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-bottom">
+      <p>&copy; 2026 PixelGear Co. Admin Mode.</p>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>
