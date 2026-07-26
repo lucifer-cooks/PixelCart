@@ -9,7 +9,9 @@
 
 <br>
 
-<img src="./client/images/mockups/preview.jpg" alt="PixelGear E-Commerce Preview Mockup" width="800" style="border-radius: 12px; border: 1px solid #22d3ee; box-shadow: 0 8px 30px rgba(6, 182, 212, 0.25);">
+| 🏠 Home Page Interface | 🛍️ Shop Product Grid |
+| :---: | :---: |
+| <img src="./client/images/mockups/home_preview.png" width="420" alt="PixelGear Home Screen" style="border-radius: 8px; border: 1px solid #22d3ee; box-shadow: 0 4px 20px rgba(6,182,212,0.15);"> | <img src="./client/images/mockups/shop_preview.png" width="420" alt="PixelGear Shop Screen" style="border-radius: 8px; border: 1px solid #ec4899; box-shadow: 0 4px 20px rgba(236,72,153,0.15);"> |
 
 <br>
 
