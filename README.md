@@ -1,75 +1,88 @@
-# PixelGear - Premium Mechanical Keyboards E-Commerce
+<div align="center">
 
-A modern, full-stack, responsive e-commerce platform specializing in premium mechanical keyboards, artisan keycaps, switches, and deskmats. Featuring secure authentication, Stripe payment integrations (with simulated fallback), review submittals, dynamic cart/wishlist management, and a complete administrator operations panel.
+# 🕹️ PixelGear
+### *Premium E-Sports Gaming Accessories & Custom Gear E-Commerce*
 
----
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-green.svg)](https://nodejs.org/)
+[![Database: MongoDB Memory](https://img.shields.io/badge/database-in--memory--fallback-blue.svg)](https://github.com/nodkz/mongodb-memory-server)
 
-## 🚀 Key Features
+<br>
 
-* **Visual Excellence**: Curated responsive dark-mode cyber design, subtle glows, micro-interactions, and skeleton loading screens.
-* **Interactive Switch Soundboard**: Experience the tactile sounds of Linear, Tactile, and Clicky switches simulated directly with raw Web Audio API.
-* **Product Detail Gallery**: Custom high-resolution keyboard gallery view featuring active hover-based image zoom.
-* **Simulated & Real Stripe Checkouts**: Live payment elements loading when Stripe secret/publishable keys are supplied, otherwise falls back to a simulated secure test card layout.
-* **Printable Invoices**: Export detailed PDF invoices cleanly via standard browser printing layouts.
-* **Admin dashboard**: Aggregated KPI stats (gross revenue, customer growth, warnings list), full keyboard product creation (supporting Multer image files), order tracking status modifiers, and account suspension switches.
+<img src="./client/images/mockups/preview.jpg" alt="PixelGear E-Commerce Preview Mockup" width="800" style="border-radius: 12px; border: 1px solid #22d3ee; box-shadow: 0 8px 30px rgba(6, 182, 212, 0.25);">
 
----
+<br>
 
-## 🛠 Tech Stack
+*A high-performance, glassmorphic, e-sports gaming accessories web application. Ready to run out of the box with zero installation prerequisites.*
 
-* **Frontend**: HTML5, CSS3 (Vanilla), JavaScript (Vanilla)
-* **Backend**: Node.js, Express.js
-* **Database**: MongoDB + Mongoose ODM
-* **Security & Auth**: JWT, bcrypt, Helmet, Cookie-Parser
-* **Uploads**: Multer image parsing
-* **Payment**: Stripe SDK integration
+</div>
 
 ---
 
-## ⚙ Setup & Run Instructions
+## 💎 Features & Highlights
 
-### 1. Prerequisites
-Ensure you have **Node.js** (v16+) and a running **MongoDB** instance (local on `mongodb://localhost:27017` or cloud URI).
+### ⚡ Developer Sandbox Fallback
+If no local MongoDB connection is found, the server automatically spawns an **in-memory database instance** (`mongodb-memory-server`) in less than 2 seconds, seeds default gaming gear catalogs, and starts without throwing any timeout errors. **Run the entire app with a single command!**
 
-### 2. Install Dependencies
+### 🎹 Interactive Keyboard Customizer
+Features an **interactive sound board synthesizer** on the home page powered by the browser's native **Web Audio API**. Test linear (thocky), tactile (pop), and clicky sound profiles dynamically via keyboard presses or mouse clicks!
+
+### 🎨 Premium Glassmorphism UI
+A gorgeous cyberpunk blueprint theme with glowing grid backdrops, subtle hover animations, dynamic magnifying glass zooms on product viewports, and custom scrollbars. Includes a responsive dark/light mode toggle with smart color-variable headers.
+
+### 💳 Complete Checkout & Order Management
+Full-stack shopping cart, saved-for-later queues, wishlist bookmarks, profile management, and a mock Stripe payment flow that connects and generates order invoices.
+
+### ⚙️ Rich Admin Controls
+A statistics-packed admin panel displaying real-time store metrics (revenue, orders, items) and complete CRUD interfaces to add, edit, or delete catalog listings directly from the dashboard.
+
+---
+
+## 🎁 Benefits
+
+* **No Prerequisites**: Zero MongoDB installations, docker containers, or local database configurations needed to run. Run `npm start` and play!
+* **Aesthetic First**: Built to stand out with customized CSS variables, Outfit/Inter typography, and vibrant gradients rather than generic framework templates.
+* **Tested & Reliable**: Equipped with a full integration test suite confirming connection, authentication, shopping cart edits, and checkouts.
+* **Modern API**: Standard MVC structure using Express, JWT tokens, secure HTTP cookies, and robust schema validation.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | HTML5, CSS3 (Vanilla Custom System), JavaScript (ES6 Modules) |
+| **Backend** | Node.js, Express.js |
+| **Database** | MongoDB & Mongoose ORM |
+| **In-Memory fallback** | `mongodb-memory-server` (Mongoose v4.4.25 fallback wrapper) |
+| **Auth & Security** | JSON Web Tokens (JWT), Cookie Parser, Bcrypt, Helmet |
+| **Payments** | Stripe (Mock & Live Test modes) |
+
+---
+
+## 🚀 Quick Start Guide
+
+### 1. Install Dependencies
 ```bash
 npm install
 ```
 
-### 3. Configure Environment Variables
-Create a `.env` file in the root directory (one is pre-created with defaults):
-```env
-PORT=3000
-MONGODB_URI=mongodb://localhost:27017/pixelgear
-JWT_SECRET=pixelgearsecretkey
-STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
-STRIPE_SECRET_KEY=your_stripe_secret_key
-NODE_ENV=development
-```
-
-### 4. Seed Database
-Seeding populates the database with categories, keyboard inventory, and preset login credentials:
+### 2. Start the Application
+Run the start script. The application will check for local MongoDB, boot the in-memory fallback, seed default user accounts, and start the server:
 ```bash
-npm run seed
-```
-
-**Seeded Credentials:**
-* **Admin Profile**: `admin@pixelgear.com` / `admin123`
-* **Customer Profile**: `customer@pixelgear.com` / `customer123`
-
-### 5. Launch Server
-Start the Express server locally:
-```bash
-# Run with Nodemon in development
-npm run dev
-
-# Start in production mode
 npm start
 ```
-The application will open on `http://localhost:3000`.
+Open **[http://localhost:3000](http://localhost:3000)** in your browser!
 
-### 6. Run Integration Test Suite
-To verify core auth, product searches, cart additions, and simulated order generation:
+### 3. Run Integration Tests
 ```bash
 npm run test
 ```
+
+---
+
+## 🔑 Default Test Profiles
+Use these preloaded credentials to explore customer and administrator features:
+
+* **Customer Account**: `customer@pixelgear.com` / `customer123`
+* **Admin Account**: `admin@pixelgear.com` / `admin123`
